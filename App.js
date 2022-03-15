@@ -1,29 +1,26 @@
 import React, {Components} from 'react'
-import { StyleSheet, Text, View } from 'react-native';
-import Slider from '@react-native-community/slider'
+import { StyleSheet, Text, View, Switch } from 'react-native';
 export default class App extends Components{
   
   constructor(props){
     super(props)
-    this.state = {
-      valor: 0
-    }
+    this.state = { status: false}
   }
 
   render(){
     return (
       <View style={styles.container}>
 
-        <Slider
-          minimumValue={0}
-          maximumValue={100}
-          onValueChange={(valorSelecionado)=> this.setState({valor: valorSelecionado})}
-          value={this.state.valor}
-          minimumTrackTintColor="#00FF00"
-          maximumTrackTintColor="#FF0000"
-        />
-
+        <Switch
+          value={this.state.status}
+          onValueChange={(valorSwitch)=> this.setState({status: valorSwitch})}
+          thumbColor="#FF0000"
+          />
+          <Text>
+            {(this.state.status) ? "Ativo" : "Inativo"}
+          </Text>
       </View>
+
     );
   }
 }
