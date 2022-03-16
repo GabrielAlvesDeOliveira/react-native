@@ -1,52 +1,23 @@
 import React, { Component } from 'react'
-import { StyleSheet, Text, View, FlatList, ActivityIndicator } from 'react-native';
-import Filmes from './src/Filmes';
-import api from './src/services/api'
+import { StyleSheet, Text, View} from 'react-native';
+import Conversor from './src/Conversor';
 export default class App extends Component {
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      filmes: [],
-      loading: true
-    }
-  }
-
-  async componentDidMount() {
-    const response = await api.get('r-api/?api=filmes')
-    this.setState({
-      filmes: response.data,
-      loading: false
-    })
-  }
-
   render() {
-
-    if (this.state.loading) {
-      return (
-        <View style={{alignItems: 'center', justifyContent: 'center', flex: 1}}>
-          <ActivityIndicator color="#09A6FF" size={40}/>
-        </View>
-      )
-    } else {
-
-      return (
-        <View style={styles.container}>
-          <FlatList
-            data={this.state.filmes}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={(item) => <Filmes data={item} />}
-          />
-
-        </View>
-      );
-    }
+    return (
+      <View style={styles.container}>
+        <Conversor moedaA="USD" moedaB="BRL"/>
+      </View>
+    );
   }
+
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     marginTop: 20
   }
 });
