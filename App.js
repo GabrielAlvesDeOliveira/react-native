@@ -1,51 +1,65 @@
-import React, { Component } from 'react'
-import { StyleSheet, Text, View, Animated, TouchableOpacity } from 'react-native';
-export default class App extends Component {
+import React, {useState, useEffect} from 'react'
+import { StyleSheet, Text, View, TouchableOpacity, TextInput} from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 
-  constructor(props) {
-    super(props)
-    this.state = {
+function App(){
+  
+  const [nome, setNome] = useState('')
+  const [input, setInput] = useState('')
 
-      LarAni: new Animated.Value(0)
-
+  useEffect(()=>{
+    
+    async function getStorage(){
+      const nomeStorage = await AsyncStorage.getItem('nomes')
+      if(nomeStorage !== null){
+        setNome(nomeStorage)
+      }
     }
 
-    Animated.timing(
-      this.state.LarAni,
-      {
-        toValue: 100,
-        duration: 5000,
-        useNativeDriver: false
-      }
-    ).start()
+    getStorage()
 
+  },[])
+
+  useEffect(()=>{
+
+    async function saveStorage(){
+      await AsyncStorage.setItem('nomes', nome)
+    }
+
+    saveStorage()
+
+  },[nome])
+  
+  function alteraNome(){
+    setNome(input)
+    setInput('')
   }
 
-  render() {
+  return(
+    <View style={styles.container}>
 
-    let porcentagemAnimate = this.state.LarAni.interpolate({
-      inputRange: [0, 100],
-      outputRange: ['0%', '100%']
-    })
+      <TextInput placeholder='Seu nome' value={input} onChangeText={(text)=>setInput(text)}/>
 
-    return (
-      <View style={styles.container}>
-        
-        <Animated.View style={{backgroundColor: '#4169E1', width: porcentagemAnimate, height: 25}}>
+      <TouchableOpacity style={styles.btn} onPress={alteraNome}>
+        <Text style={styles.btnText}> Altera nome </Text>
+      </TouchableOpacity>
 
-        </Animated.View>
-
-      </View>
-    );
-  }
-
+      <Text> {nome} </Text>
+    </View>
+  ) 
 }
 
 const styles = StyleSheet.create({
-  container: {
+  container:{
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'flex-start',
     marginTop: 20
+  },
+  btn:{
+    backgroundColor: '#222',
+    alignItems: 'center'
+  },
+  btnText:{
+    color: '#fff'
   }
-});
+})
+export default App;
