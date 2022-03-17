@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import { StyleSheet, Text, View, Animated} from 'react-native';
+import { StyleSheet, Text, View, Animated, TouchableOpacity } from 'react-native';
 export default class App extends Component {
 
-  constructor(props){
+  constructor(props) {
     super(props)
     this.state = {
       LarAnimada: new Animated.Value(150),
@@ -10,27 +10,31 @@ export default class App extends Component {
       OpacidadeAnimada: new Animated.Value(0)
     }
 
-    Animated.loop(
-      
-      Animated.sequence([
-        Animated.timing(
-          this.state.LarAnimada,
-          {
-            toValue: 200,
-            duration: 700
-          }
-        ),
-        Animated.timing(
-          this.state.LarAnimada,
-          {
-            toValue: 0,
-            duration: 700
-          }
-        )
-      ])
+    this.carregarGrafico = this.carregarGrafico.bind(this)
 
-    ).start()
-    
+  }
+
+  carregarGrafico() {
+
+    Animated.sequence([
+
+      Animated.timing(
+        this.state.OpacidadeAnimada,
+        {
+          toValue: 1,
+          duration: 400
+        }
+      ),
+
+      Animated.timing(
+        this.state.AltAnimada,
+        {
+          toValue: 300,
+          duration: 1000
+        }
+      )
+    ]).start()
+
   }
 
   render() {
@@ -38,9 +42,21 @@ export default class App extends Component {
     return (
       <View style={styles.container}>
 
-      <Animated.View style={{width: this.state.LarAnimada, height:this.state.AltAnimada, backgroundColor: '#4169E1', justifyContent: 'center', opacity: this.state.OpacidadeAnimada}}>
-        <Text style={{color: '#FFF', fontSize: 25, textAlign: 'center'}}>Carregando...</Text>
-      </Animated.View>
+        <View style={{ height: 80, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', backgroundColor: '#4169E1', opacity: this.state.OpacidadeAnimada }}>
+          <TouchableOpacity onPress={this.carregarGrafico}>
+            <Text style={{ fontSize: 25, color: "#FFF" }}>
+              Gerar grafico
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'center' }}>
+
+
+          <Animated.View style={{ width: this.state.LarAnimada, height: this.state.AltAnimada, backgroundColor: '#FF0000', justifyContent: 'center'}}>
+            <Text style={{ color: '#FFF', fontSize: 25, textAlign: 'center' }}>Carregando...</Text>
+          </Animated.View>
+        </View>
 
       </View>
     );
