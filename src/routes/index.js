@@ -10,12 +10,23 @@ export default function Routes() {
   return (
     <Drawer.Navigator
       screenOptions={{
-        headerShown: false
+        headerShown: false,
+        drawerStyle: {
+          backgroundColor: '#121212'
+        },
+        drawerActiveBackgroundColor: '#3B3DBF',
+        drawerActiveTintColor: '#FFF',
+
+        drawerInactiveBackgroundColor: '#CCC',
+        drawerInactiveTintColor: '#000'
       }}
     >
       <Drawer.Screen 
         name="HomeStack"
         component={StackRoutes}
+        options={{
+          title: 'Inicio'
+        }}
       />
 
       <Drawer.Screen 
