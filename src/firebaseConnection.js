@@ -1,9 +1,10 @@
 import firebase from "firebase/app";
 import 'firebase/database'
-
+import { AsyncStorage } from 'react-native'
 const firebaseConfig = {
   apiKey: "AIzaSyByxKmr-Bi5AtirwdAFJEXst_8w6SgCFsU",
   authDomain: "meuapp-7e8e3.firebaseapp.com",
+  databaseURL: "https://meuapp-7e8e3-default-rtdb.firebaseio.com",
   projectId: "meuapp-7e8e3",
   storageBucket: "meuapp-7e8e3.appspot.com",
   messagingSenderId: "646905605683",
