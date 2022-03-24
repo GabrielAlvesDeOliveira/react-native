@@ -1,13 +1,34 @@
 import React, { useState } from 'react'
 import { Text, StyleSheet, SafeAreaView, TextInput, TouchableOpacity } from 'react-native'
 
-export default function Login() {
+import firebase, {database} from '../../firebaseConnection'
+import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword } from 'firebase/auth'
+export default function Login({changeStatus}) {
+
+  const [type, setType] = useState('login')
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
   function handleLogin(){
-    
+    const auth = getAuth()
+    if(type === 'login'){
+      const user = signInWithEmailAndPassword(auth, email, password)
+      .then((user)=>{
+        changeStatus(user.user.uid)
+      }).catch(err => {
+        alert('ops, parece que houve um erro')
+        return;
+      })
+    }else{
+      const user = createUserWithEmailAndPassword(auth, email, password)
+      .then((user)=>{
+        changeStatus(user.user.uid)
+      }).catch(err => {
+        alert('ops, parece que houve um erro')
+        return;
+      })
+    }
   }
 
   return (
@@ -31,11 +52,15 @@ export default function Login() {
       style={styles.handleLogin}
       onPress={handleLogin}
       >
-        <Text style={styles.loginText}>Acessar</Text>
+        <Text style={styles.loginText}>
+          { type === 'login' ? 'Acessar' : 'Cadastrar'}
+        </Text>
       </TouchableOpacity>
 
-      <TouchableOpacity>
-        <Text style={{textAlign:'center'}}>Criar uma conta</Text>
+      <TouchableOpacity onPress={()=> setType(type => type === 'login' ? 'cadastrar' : 'login')}>
+        <Text style={{textAlign:'center'}}>
+          {type === 'login' ? 'Criar uma conta' : 'Já possuo uma conta'}
+        </Text>
       </TouchableOpacity>
     </SafeAreaView>
   )
