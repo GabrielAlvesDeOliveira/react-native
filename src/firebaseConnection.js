@@ -1,6 +1,6 @@
-import firebase from "firebase/app";
-import 'firebase/database'
-import { AsyncStorage } from 'react-native'
+import { initializeApp } from "firebase/app";
+import { getDatabase } from 'firebase/database'
+
 const firebaseConfig = {
   apiKey: "AIzaSyByxKmr-Bi5AtirwdAFJEXst_8w6SgCFsU",
   authDomain: "meuapp-7e8e3.firebaseapp.com",
@@ -12,5 +12,7 @@ const firebaseConfig = {
   measurementId: "G-B2NC2MF5K1"
 };
 
-firebase.initializeApp(firebaseConfig)
-export default firebase
+const app = initializeApp(firebaseConfig)
+
+export const database = getDatabase(app)
+export default app
