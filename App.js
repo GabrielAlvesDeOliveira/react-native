@@ -1,43 +1,43 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, TextInput, Button } from 'react-native'
 import firebase, { database } from "./src/firebaseConnection";
-// import { ref, onValue, set, remove, push } from "firebase/database";
+import { ref, onValue, set, remove, push } from "firebase/database";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth'
 
 export default function App() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState('')
+  const [name, setName] = useState('')
 
-  async function logar() {
-    const auth = getAuth();
-    await signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        alert('Bem vindo: ' + userCredential.user.email)
-        setUser(userCredential.user.email)
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-
-        console.error(errorCode)
-        alert(errorMessage)
-      });
-
-    setEmail('')
-    setPassword('')
-  }
-
-  async function logout() {
+  async function cadastrar() {
     const auth = getAuth()
-    await signOut(auth)
 
-    alert('Deslogado')
-    setUser('')
+    await createUserWithEmailAndPassword(auth, email, password)
+    .then((value)=>{
+      // alert(value.user.uid)
+      set(ref(database, 'usuarios/' + value.user.uid), {
+        nome: name
+      });    
+
+      alert('Usuario criado com sucesso')
+      setName('')
+      setEmail('')
+      setPassword('')
+    }).catch(error => {
+      alert('algo deu errado')
+    })
   }
 
   return (
     <View style={styles.container}>
+
+      <Text style={styles.texto}>Nome</Text>
+      <TextInput style={styles.input}
+        underLineColorAndroid="transparent"
+        onChangeText={(texto) => setName(texto)}
+        value={name}
+      />
+
       <Text style={styles.texto}>Email</Text>
       <TextInput style={styles.input}
         underLineColorAndroid="transparent"
@@ -52,19 +52,9 @@ export default function App() {
       />
 
       <Button
-        title="Acessar"
-        onPress={logar}
+        title="Cadastrar"
+        onPress={cadastrar}
       />
-      <Text style={{ marginTop: 20, marginBottom: 20, fontSize: 23, textAlign: 'center' }}>
-        {user}
-      </Text>
-
-      {user.length > 0 ?
-        (
-          <Button
-            title="Logout"
-            onPress={logout}
-          />) : <Text>Nenhum usuario logado</Text>}
     </View>
   )
 }
