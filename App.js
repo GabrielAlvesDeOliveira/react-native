@@ -1,41 +1,36 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, TextInput, Button } from 'react-native'
+import { View, Text, StyleSheet, TextInput, Button, FlatList, ActivityIndicator } from 'react-native'
 import firebase, { database } from "./src/firebaseConnection";
 import { ref, onValue, set, remove, push } from "firebase/database";
+import Listagem from "./src/Listagem";
 
 export default function App() {
   const [nome, setNome] = useState('')
   const [cargo, setCargo] = useState('')
+  const [usuarios, setUsuarios] = useState([])
+  const [loading, setLoading] = useState(true)
+
   useEffect(() => {
 
     async function dados() {
-      // await onValue(ref(database, 'usuarios/1'), (snapshot) => {
-      //   console.log(snapshot.val())
-      //   setNome(snapshot.val().nome)
-      //   setIdade(snapshot.val().idade)
-      // })
 
-      // set(ref(database, 'tipo'),"clientela").then(()=>{
-      //   console.log('ok')
-      // }).catch(error=>{
-      //   console.log(error)
-      // })
+      await onValue(ref(database, 'usuarios'), (snapshot) => {
 
-      // remove(ref(database, 'tipo'),"clientela").then(()=>{
-      //   console.log('ok')
-      // }).catch(error=>{
-      //   console.log(error)
-      // })
+        setUsuarios([])
 
-      // await set(ref(database, `usuarios/3`), {
-      //   nome: 'João',
-      //   idade: 13
-      // }).then(() => {
-      //     console.log('ok');
-      //   }).catch((error) => {
-      //   console.error(error);
-      // });
+        snapshot.forEach(element => {
 
+          const data = {
+            key: element.key,
+            nome: element.val().nome,
+            cargo: element.val().cargo
+          }
+
+          setUsuarios(oldArray => [...oldArray, data].reverse())
+
+        });
+        setLoading(false)
+      })
 
     }
 
@@ -54,7 +49,7 @@ export default function App() {
       alert('cadastrado')
       setCargo('')
       setNome('')
-      
+
     }
   }
 
@@ -77,6 +72,18 @@ export default function App() {
         title="Novo funcionario"
         onPress={cadastrar}
       />
+
+      {loading ? (
+        <ActivityIndicator color="#121212" size={45} />
+      ):(
+        <FlatList
+          keyExtractor={item => item.key}
+          data={usuarios}
+          renderItem={({ item }) => (<Listagem data={item} />)}
+        />
+      )}
+
+
     </View>
   )
 }
