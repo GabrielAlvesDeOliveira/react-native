@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, SafeAreaView, TextInput, Button } from 'react-native'
+import { View, Text, StyleSheet, SafeAreaView, TextInput, Button, TouchableOpacity } from 'react-native'
 import firebase, { database } from "./src/firebaseConnection";
 import { ref, onValue, set, remove, push } from "firebase/database";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth'
@@ -15,7 +15,17 @@ export default function App() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text>DENTRO DA TELA TAREFAS</Text>
+      
+      <View>
+        <TextInput 
+          style={styles.input}
+          placeholder="O que vai fazer hoje?"
+        />
+        <TouchableOpacity>
+          <Text></Text>
+        </TouchableOpacity>
+      </View>
+
     </SafeAreaView>
   )
 }
