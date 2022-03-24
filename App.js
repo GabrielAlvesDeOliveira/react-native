@@ -1,88 +1,50 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, TextInput, Button, FlatList, ActivityIndicator } from 'react-native'
+import { View, Text, StyleSheet, TextInput, Button } from 'react-native'
 import firebase, { database } from "./src/firebaseConnection";
-import { ref, onValue, set, remove, push } from "firebase/database";
-import Listagem from "./src/Listagem";
+// import { ref, onValue, set, remove, push } from "firebase/database";
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
 
 export default function App() {
-  const [nome, setNome] = useState('')
-  const [cargo, setCargo] = useState('')
-  const [usuarios, setUsuarios] = useState([])
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-
-    async function dados() {
-
-      await onValue(ref(database, 'usuarios'), (snapshot) => {
-
-        setUsuarios([])
-
-        snapshot.forEach(element => {
-
-          const data = {
-            key: element.key,
-            nome: element.val().nome,
-            cargo: element.val().cargo
-          }
-
-          setUsuarios(oldArray => [...oldArray, data].reverse())
-
-        });
-        setLoading(false)
-      })
-
-    }
-
-    dados()
-  }, [])
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
 
   async function cadastrar() {
-    if (nome !== '' && cargo !== '') {
-
-      const newPostKey = push(ref(database), 'usuarios').key;
-
-      await set(ref(database, `usuarios/${newPostKey}`), {
-        nome: nome,
-        cargo: cargo
+    const auth = getAuth();
+    await createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        alert('Usuario criado' + userCredential.user.email)
       })
-      alert('cadastrado')
-      setCargo('')
-      setNome('')
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
 
-    }
+        console.error(errorCode)
+        alert(errorMessage)
+      });
+
+    setEmail('')
+    setPassword('')
   }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.texto}>Nome </Text>
+      <Text style={styles.texto}>Email</Text>
       <TextInput style={styles.input}
         underLineColorAndroid="transparent"
-        onChangeText={(texto) => setNome(texto)}
-        value={nome}
+        onChangeText={(texto) => setEmail(texto)}
+        value={email}
       />
-      <Text style={styles.texto}>Cargo </Text>
+      <Text style={styles.texto}>Senha </Text>
       <TextInput style={styles.input}
         underLineColorAndroid="transparent"
-        onChangeText={(texto) => setCargo(texto)}
-        value={cargo}
+        onChangeText={(texto) => setPassword(texto)}
+        value={password}
       />
 
       <Button
-        title="Novo funcionario"
+        title="Cadastrar"
         onPress={cadastrar}
       />
-
-      {loading ? (
-        <ActivityIndicator color="#121212" size={45} />
-      ):(
-        <FlatList
-          keyExtractor={item => item.key}
-          data={usuarios}
-          renderItem={({ item }) => (<Listagem data={item} />)}
-        />
-      )}
-
 
     </View>
   )
