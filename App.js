@@ -2,17 +2,19 @@ import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, TextInput, Button } from 'react-native'
 import firebase, { database } from "./src/firebaseConnection";
 // import { ref, onValue, set, remove, push } from "firebase/database";
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth'
 
 export default function App() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [user, setUser] = useState('')
 
-  async function cadastrar() {
+  async function logar() {
     const auth = getAuth();
-    await createUserWithEmailAndPassword(auth, email, password)
+    await signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        alert('Usuario criado' + userCredential.user.email)
+        alert('Bem vindo: ' + userCredential.user.email)
+        setUser(userCredential.user.email)
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -24,6 +26,14 @@ export default function App() {
 
     setEmail('')
     setPassword('')
+  }
+
+  async function logout() {
+    const auth = getAuth()
+    await signOut(auth)
+
+    alert('Deslogado')
+    setUser('')
   }
 
   return (
@@ -42,10 +52,19 @@ export default function App() {
       />
 
       <Button
-        title="Cadastrar"
-        onPress={cadastrar}
+        title="Acessar"
+        onPress={logar}
       />
+      <Text style={{ marginTop: 20, marginBottom: 20, fontSize: 23, textAlign: 'center' }}>
+        {user}
+      </Text>
 
+      {user.length > 0 ?
+        (
+          <Button
+            title="Logout"
+            onPress={logout}
+          />) : <Text>Nenhum usuario logado</Text>}
     </View>
   )
 }
