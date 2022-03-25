@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, SafeAreaView, TextInput, Button, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, SafeAreaView, TextInput, Button, TouchableOpacity, FlatList } from 'react-native'
 import firebase, { database } from "./src/firebaseConnection";
 import { ref, onValue, set, remove, push } from "firebase/database";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth'
 import Login from "./src/components/Login";
+import TaskList from "./src/components/TaskList";
+let tasks = [
+  { key: '1', name: 'Comprar Coca cola' },
+  { key: '2', name: 'Estudar javascript' },
+]
 
 export default function App() {
   
   const [user, setUser] = useState(null)
+  const [newTask, setNewTask] = useState('')
 
   if(!user){
     return <Login changeStatus={(user)=> setUser(user)}/>
@@ -16,15 +22,19 @@ export default function App() {
   return (
     <SafeAreaView style={styles.container}>
       
-      <View>
+      <View style={styles.containerTask}>
         <TextInput 
           style={styles.input}
           placeholder="O que vai fazer hoje?"
+          value={newTask}
+          onChangeText={(text)=> setNewTask(text)}
         />
-        <TouchableOpacity>
-          <Text></Text>
+        <TouchableOpacity style={buttonAdd}>
+          <Text style={buttonText}>+</Text>
         </TouchableOpacity>
       </View>
+
+      <FlatList data={tasks} keyExtractor={(item)=> item.key} renderItem={({item})=> (<TaskList data={item}/>)} />
 
     </SafeAreaView>
   )
@@ -36,5 +46,31 @@ const styles = StyleSheet.create({
     paddingTop: 25,
     paddingHorizontal: 10,
     backgroundColor: '#F2F6FC'
+  },
+  containerTask:{
+    flexDirection: 'row',
+  },
+  input: {
+    flex:1,
+    marginBottom: 10,
+    padding: 10,
+    backgroundColor: '#FFF',
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: '#141414',
+    height: 45
+  },
+  buttonAdd:{
+    backgroundColor: '#141414',
+    height: 45,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: 5,
+    paddingHorizontal: 14,
+    borderRadius: 4,
+  },
+  buttonText:{ 
+    color: '#FFF',
+    fontSize: 22,
   }
 })
