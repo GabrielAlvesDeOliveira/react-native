@@ -25,6 +25,7 @@ export default function Login({changeStatus}) {
       .then((user)=>{
         changeStatus(user.user.uid)
       }).catch(err => {
+        console.log(err)
         alert('ops, parece que houve um erro')
         return;
       })

@@ -1,19 +1,36 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, SafeAreaView, TextInput, Button, TouchableOpacity, FlatList } from 'react-native'
 import firebase, { database } from "./src/firebaseConnection";
-import { ref, onValue, set, remove, push } from "firebase/database";
+import { ref, onValue, set, remove, push, child } from "firebase/database";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth'
 import Login from "./src/components/Login";
 import TaskList from "./src/components/TaskList";
-let tasks = [
-  { key: '1', name: 'Comprar Coca cola' },
-  { key: '2', name: 'Estudar javascript' },
-]
 
 export default function App() {
   
   const [user, setUser] = useState(null)
+  const [tasks, setTasks] = useState([])
+
   const [newTask, setNewTask] = useState('')
+
+  function handleAdd(){
+    if(newTask === ''){
+      return;
+    }
+
+    console.log(firebase)
+    let tarefas = child(ref(database), 'usuarios')
+    let chave = push(tarefas).key
+
+    console.log(chave)
+    return
+    set(ref(database, `tasks/${newPostKey}`), {  name: newTask, key: newPostKey }).then(() => {
+      console.log('tarefa criada')
+    } ).catch(err => {
+      console.log(err)
+    } )
+
+  }
 
   function handleDelete(key) {
     console.log(key)
@@ -37,8 +54,8 @@ export default function App() {
           value={newTask}
           onChangeText={(text)=> setNewTask(text)}
         />
-        <TouchableOpacity style={buttonAdd}>
-          <Text style={buttonText}>+</Text>
+        <TouchableOpacity style={styles.buttonAdd} onPress={handleAdd}>
+          <Text style={styles.buttonText}>+</Text>
         </TouchableOpacity>
       </View>
 
