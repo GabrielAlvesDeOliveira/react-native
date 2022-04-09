@@ -1,34 +1,67 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, SafeAreaView, TextInput, Button, TouchableOpacity, FlatList } from 'react-native'
+import { View, Text, StyleSheet, SafeAreaView, TextInput, Button, TouchableOpacity, FlatList, Keyboard } from 'react-native'
 import firebase, { database } from "./src/firebaseConnection";
-import { ref, onValue, set, remove, push, child } from "firebase/database";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth'
+import { ref, onValue, set, remove, push, child, get } from "firebase/database";
 import Login from "./src/components/Login";
 import TaskList from "./src/components/TaskList";
 
 export default function App() {
-  
+
   const [user, setUser] = useState(null)
   const [tasks, setTasks] = useState([])
 
   const [newTask, setNewTask] = useState('')
 
-  function handleAdd(){
-    if(newTask === ''){
-      return;
+  useEffect(()=>{
+    
+    function getUser(){
+
+      if(!user){
+        return;
+      }
+
+      const listTarefas = child(ref(database), `tasks/${user}`)
+      get(listTarefas).then(snapshot => {
+        if (snapshot.exists()) {
+          snapshot.forEach(childSnapshot => {
+            const { name } = childSnapshot.val()
+            const key = childSnapshot.key
+            setTasks(prevState => [...prevState, { name, key }])
+          })
+        } else {
+          console.log("No data available");
+        }      
+      }).catch(error => {
+        console.error(error)
+      })
+
     }
 
-    console.log(firebase)
-    let tarefas = child(ref(database), 'usuarios')
+    getUser()
+
+  },[user])
+
+  function handleAdd() {
+    if (newTask === '') {
+      return;
+    }
+    
+    let tarefas = child(ref(database), user)
     let chave = push(tarefas).key
 
-    console.log(chave)
-    return
-    set(ref(database, `tasks/${newPostKey}`), {  name: newTask, key: newPostKey }).then(() => {
-      console.log('tarefa criada')
-    } ).catch(err => {
+    set(ref(database, `tasks/${tarefas.key}/${chave}`), { name: newTask }).then(() => {
+      const data = {
+        key: chave,
+        name: newTask
+      }
+
+      setTasks(oldTasks => [...oldTasks, data])
+    }).catch(err => {
       console.log(err)
-    } )
+    })
+
+    Keyboard.dismiss()
+    setNewTask('')
 
   }
 
@@ -40,26 +73,26 @@ export default function App() {
     console.log(data)
   }
 
-  if(!user){
-    return <Login changeStatus={(user)=> setUser(user)}/>
+  if (!user) {
+    return <Login changeStatus={(user) => setUser(user)} />
   }
 
   return (
     <SafeAreaView style={styles.container}>
-      
+
       <View style={styles.containerTask}>
-        <TextInput 
+        <TextInput
           style={styles.input}
           placeholder="O que vai fazer hoje?"
           value={newTask}
-          onChangeText={(text)=> setNewTask(text)}
+          onChangeText={(text) => setNewTask(text)}
         />
         <TouchableOpacity style={styles.buttonAdd} onPress={handleAdd}>
           <Text style={styles.buttonText}>+</Text>
         </TouchableOpacity>
       </View>
 
-      <FlatList data={tasks} keyExtractor={(item)=> item.key} renderItem={({item})=> (<TaskList data={item} deleteItem={handleDelete} editItem={handleEdit}/>)} />
+      <FlatList data={tasks} keyExtractor={(item) => item.key} renderItem={({ item }) => (<TaskList data={item} deleteItem={handleDelete} editItem={handleEdit} />)} />
 
     </SafeAreaView>
   )
@@ -72,11 +105,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     backgroundColor: '#F2F6FC'
   },
-  containerTask:{
+  containerTask: {
     flexDirection: 'row',
   },
   input: {
-    flex:1,
+    flex: 1,
     marginBottom: 10,
     padding: 10,
     backgroundColor: '#FFF',
@@ -85,7 +118,7 @@ const styles = StyleSheet.create({
     borderColor: '#141414',
     height: 45
   },
-  buttonAdd:{
+  buttonAdd: {
     backgroundColor: '#141414',
     height: 45,
     alignItems: 'center',
@@ -94,7 +127,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     borderRadius: 4,
   },
-  buttonText:{ 
+  buttonText: {
     color: '#FFF',
     fontSize: 22,
   }
