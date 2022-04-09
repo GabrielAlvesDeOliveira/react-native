@@ -66,7 +66,11 @@ export default function App() {
   }
 
   function handleDelete(key) {
-    console.log(key)
+    remove(ref(database, `tasks/${user}/${key}`)).then(() => {
+      setTasks(oldTasks => oldTasks.filter(task => task.key !== key))
+    }).catch(err => {
+      console.log(err)
+    })
   }
 
   function handleEdit(data) {
