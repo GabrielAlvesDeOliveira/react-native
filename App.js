@@ -1,16 +1,18 @@
+import 'react-native-gesture-handler';
 import React from "react";
-import { Container, Titulo, Nome, BotaoSujeito, BotaoText} from './src/styles' 
+import { NavigationContainer } from '@react-navigation/native';
+import { View, StatusBar } from "react-native";
+import firebase from "./src/firebaseConnection";
+import { Container, Titulo, Nome, BotaoSujeito, BotaoText } from './src/styles'
+import Routes from './src/routes';
 export default function App() {
 
   return (
-    <Container>
-      <Titulo cor='#ff0000'> Sujeito Programador </Titulo>
-      <Nome>Ola Gabriel</Nome>
 
-      <BotaoSujeito onPress={ () => alert('CLICOU' )}>
-        <BotaoText>Entrar</BotaoText>
-      </BotaoSujeito>
+    <NavigationContainer>
+      <StatusBar backgroundColor="#131313" barStyle="light-content"/>
+      <Routes />
+    </NavigationContainer>
 
-    </Container>
   )
 }

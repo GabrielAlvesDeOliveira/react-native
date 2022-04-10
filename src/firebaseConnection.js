@@ -1,5 +1,5 @@
-import { initializeApp } from "firebase/app";
-import { getDatabase } from 'firebase/database'
+import firebase from "firebase/app";
+import "firebase/database";
 import 'firebase/auth'
 
 const firebaseConfig = {
@@ -13,7 +13,7 @@ const firebaseConfig = {
   measurementId: "G-B2NC2MF5K1"
 };
 
-const app = initializeApp(firebaseConfig)
-
-export const database = getDatabase(app)
-export default app
+if(!firebase.apps.length){
+  firebase.initializeApp(firebaseConfig);
+}
+export default firebase
