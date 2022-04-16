@@ -9,6 +9,7 @@ function AuthProvider({ children }){
      
     //cadastrando usuario
     async function signUp(email, passoword, nome){
+        console.log(email, passoword, nome)
         await firebase.auth().createUserWithEmailAndPassword(email, passoword)
         .then(async (value) => {
             let uid = value.user.uid
