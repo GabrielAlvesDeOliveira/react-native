@@ -12,7 +12,12 @@ export default function SigIn() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
-    const { user } = useContext(AuthContext)
+    const { signIn } = useContext(AuthContext)
+    
+    function handleSigIn(){
+        signIn(email, password)
+    }
+    
     return (
         <Background>
             <Container
@@ -28,7 +33,7 @@ export default function SigIn() {
                         autoCorrect={false}
                         autoCapitalize="none"
                         value={email}
-                        onChange={(text)=> setEmail(text)}
+                        onChangeText={(text)=> setEmail(text)}
                     />
                 </AreaInput>
                 <AreaInput>
@@ -37,10 +42,10 @@ export default function SigIn() {
                         autoCorrect={false}
                         autoCapitalize="none"
                         value={password}
-                        onChange={(text)=> setPassword(text)}
+                        onChangeText={(text)=> setPassword(text)}
                     />
                 </AreaInput>
-                <SubmitButton>
+                <SubmitButton onPress={handleSigIn}>
                     <SubmitText>Acessar</SubmitText>
                 </SubmitButton>
 
