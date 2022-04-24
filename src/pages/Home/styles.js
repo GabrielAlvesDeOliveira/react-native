@@ -28,3 +28,14 @@ margin-left: 15px;
 color: #00b94a;
 margin-bottom: 10px;
 `
+
+export const List = styled.FlatList.attrs({
+    marginHorizontal: 15
+})`
+padding-top: 15px;
+background-color: #fff;
+border-top-left-radius: 15px;
+border-top-right-radius: 15px;
+margin-left: 8px;
+margin-right: 8px;
+`
