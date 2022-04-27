@@ -13,6 +13,17 @@ const firebaseConfig = {
   measurementId: "G-B2NC2MF5K1"
 };
 
+/*
+apiKey: "AIzaSyByxKmr-Bi5AtirwdAFJEXst_8w6SgCFsU",
+authDomain: "meuapp-7e8e3.firebaseapp.com",
+databaseURL: "https://meuapp-7e8e3-default-rtdb.firebaseio.com",
+projectId: "meuapp-7e8e3",
+storageBucket: "meuapp-7e8e3.appspot.com",
+messagingSenderId: "646905605683",
+appId: "1:646905605683:web:7bb15b7bb52e105a3b7d46",
+measurementId: "G-FJ5H4EMYDS"
+*/
+
 if(!firebase.apps.length){
   firebase.initializeApp(firebaseConfig);
 }
