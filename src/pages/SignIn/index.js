@@ -1,31 +1,31 @@
-import React, {useState, useContext} from 'react'
-import { Platform } from 'react-native'
+import React, { useState, useContext } from 'react'
+import { Platform, ActivityIndicator } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { AuthContext } from '../../contexts/auth'
 
-import {Background, Container, Logo, AreaInput, Input, SubmitButton, SubmitText, LinkText, Link} from './styles'
+import { Background, Container, Logo, AreaInput, Input, SubmitButton, SubmitText, LinkText, Link } from './styles'
 
 export default function SigIn() {
-    
+
     const navigation = useNavigation()
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
-    const { signIn } = useContext(AuthContext)
-    
-    function handleSigIn(){
+    const { signIn, loadingAuth } = useContext(AuthContext)
+
+    function handleSigIn() {
         signIn(email, password)
     }
-    
+
     return (
         <Background>
             <Container
-            behavior={Platform.OS === 'ios' ? 'padding' : ''}
-            enabled
+                behavior={Platform.OS === 'ios' ? 'padding' : ''}
+                enabled
             >
 
-                <Logo source={require('../../assets/Logo.png')}/>
+                <Logo source={require('../../assets/Logo.png')} />
 
                 <AreaInput>
                     <Input
@@ -33,7 +33,7 @@ export default function SigIn() {
                         autoCorrect={false}
                         autoCapitalize="none"
                         value={email}
-                        onChangeText={(text)=> setEmail(text)}
+                        onChangeText={(text) => setEmail(text)}
                     />
                 </AreaInput>
                 <AreaInput>
@@ -42,14 +42,16 @@ export default function SigIn() {
                         autoCorrect={false}
                         autoCapitalize="none"
                         value={password}
-                        onChangeText={(text)=> setPassword(text)}
+                        onChangeText={(text) => setPassword(text)}
                     />
                 </AreaInput>
                 <SubmitButton onPress={handleSigIn}>
-                    <SubmitText>Acessar</SubmitText>
+                    {loadingAuth ? (<ActivityIndicator size={20} color="#FFf" />) : (
+                        <SubmitText>Acessar </SubmitText>
+                    )}
                 </SubmitButton>
 
-                <Link onPress={()=> navigation.navigate('SignUp')}>
+                <Link onPress={() => navigation.navigate('SignUp')}>
                     <LinkText>Criar uma conta</LinkText>
                 </Link>
 

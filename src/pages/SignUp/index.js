@@ -7,7 +7,7 @@ export default function SigIn() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [nome, setNome] = useState('')
-    const { signUp } = useContext(AuthContext)
+    const { signUp, loadingAuth} = useContext(AuthContext)
     
     function handleSignUp(){
         signUp(email, password, nome)
@@ -49,7 +49,9 @@ export default function SigIn() {
                 </AreaInput>
 
                 <SubmitButton onPress={handleSignUp}>
-                    <SubmitText>Cadastrar</SubmitText>
+                {loadingAuth ? (<ActivityIndicator size={20} color="#FFf" />) : (
+                        <SubmitText>Acessar </SubmitText>
+                    )}
                 </SubmitButton>
 
             </Container>
