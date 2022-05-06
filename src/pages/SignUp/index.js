@@ -45,6 +45,7 @@ export default function SigIn() {
                         autoCapitalize="none"
                         value={password}
                         onChangeText={(text) => setPassword(text)}
+                        secureTextEntry={true}
                     />
                 </AreaInput>
 
