@@ -4,7 +4,7 @@ import { Alert } from '@react-native'
 import { AuthContext } from "../../contexts/auth";
 import Header from "../../components/Header";
 import HistoricoList from "../../components/HistoricoList";
-import {format, isPast} from 'date-fns'
+import {format, isBefore, isPast} from 'date-fns'
 import { Background, Container, Nome, Saldo, Title } from './styles'
 
 export default function Home(){
@@ -20,7 +20,7 @@ export default function Home(){
         setSaldo(snapshot.val().saldo)
       })
 
-      await firebase.database().ref('historico').child(uid).orderByChild('date').equalTo(format(new Date, 'dd/MM/yy')).limitToLast(10).on('value', (snapshot)=>{
+      await firebase.database().ref('historico').child(uid).orderByChild('date').equalTo(format(new Date, 'dd/MM/yyyy')).limitToLast(10).on('value', (snapshot)=>{
         setHistorico([])
 
         snapshot.forEach((childItem)=>{
@@ -40,9 +40,20 @@ export default function Home(){
   },[])
 
   function handleDelete(data){
-    if( isPast(new Date(data.date))){
-      alert('Você não pode excluir um registro antigo')
-      return;
+
+    const [diaItem, mesItem, anoItem] = data.date.split('/')
+    const dateItem = new Date(`${anoItem}/${mesItem}/${diaItem}`)
+
+    const formatDiaHoje = format(new Date(), 'dd/MM/yyyy')
+    const [diaHoje, mesHoje, anoHoje] = formatDiaHoje.split('/')
+    const dateHoje = new Date(`${anoHoje}/${mesHoje}/${diaHoje}`)
+
+
+    if(isBefore(dateItem, dateHoje)){
+      if( isPast(new Date(data.date))){
+        alert('Você não pode excluir um registro antigo')
+        return;
+      }
     }
 
     Alert.alert(
