@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import MapView from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
 import { StyleSheet, Text, View, Button } from 'react-native';
 
 export default function App() {
@@ -32,14 +32,26 @@ export default function App() {
       </View>
       <Text>{region.latitude} | {region.longitude}</Text>
       <MapView
-        // mapType= "standard" | satellite | hybrid
-        // rotateEnabled={false}
-        // scrollEnabled={false}
-        // zoomEnabled={false}
-        // showsTraffic={true}
-
         region={region}
-        style={styles.map} />
+        style={styles.map} 
+        >
+        <Marker coordinate={{
+          latitude: -23.5492243,
+          longitude: -46.5813785
+        }}
+          title="Meu carro"
+          description='Gol 1.6 - PLACA ONU2021'
+          pinColor={'green'}
+        />
+        <Marker coordinate={{
+          latitude: -24.5492243,
+          longitude: -45.5813785
+        }}
+          title="Minha casa"
+          description='Casa comercial'
+          pinColor={'red'}
+        />
+        </MapView>
     </View>
   );
 }
