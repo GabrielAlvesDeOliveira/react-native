@@ -11,8 +11,8 @@ export default function App() {
     longitudeDelta: 0.0421,
   })
   const [markers, setMarkers] = useState([
-    {key: 0, image: require('./assets/maps.jpg'), cords:{latitude: -15.8080374, longitude: -47.8750231}},
-    {key: 1, image: require('./assets/maps.jpg'), cords:{latitude: -15.8380374, longitude: -47.8850231}},
+    {key: 0, aviso:"pegiso", cords:{latitude: -15.8080374, longitude: -47.8750231}, pinColor: 'red'},
+    {key: 1, aviso:"tranquilo", cords:{latitude: -15.8380374, longitude: -47.8850231}, pinColor: 'green'},
   ])
 
   function moverCidade(lat, long){
@@ -45,10 +45,14 @@ export default function App() {
         >
         {markers.map(marker => (
           <Marker
-            image={marker.image}
             key={marker.key}
             coordinate={marker.cords}
-          />
+            pinColor={marker.pinColor}
+          >
+          <View style={{height: 40, padding: 5, alignItens: 'center', justifyContent: 'center', borderRadius:  10,backgroundColor: marker.pinColor}}>
+            <Text style={{color: '#FFFFFF'}}>{marker.aviso}</Text>
+          </View>
+          </Marker>
         ))}
         </MapView>
     </View>
