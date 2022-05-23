@@ -10,6 +10,10 @@ export default function App() {
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
   })
+  const [markers, setMarkers] = useState([
+    {key: 0, cords:{latitude: -15.8080374, longitude: -47.8750231}, pinColor: "#FF0000"},
+    {key: 1, cords:{latitude: -15.8380374, longitude: -47.8850231}, pinColor: "#00FF00"},
+  ])
 
   function moverCidade(lat, long){
     setRegion({
@@ -24,6 +28,10 @@ export default function App() {
     setRegion(region)
   }
 
+  function newMarker(e){
+    setMarkers([...markers, {key: markers.length, cords: e.nativeEvent.coordinate, pinColor: "#0000FF"}])
+  }
+
   return (
     <View style={styles.container}>
       <View style={{flexDirection: 'row'}}>
@@ -32,30 +40,22 @@ export default function App() {
       </View>
       <Text>{region.latitude} | {region.longitude}</Text>
       <MapView
+        onPress={newMarker()}
         region={region}
         style={styles.map} 
         >
-        <Marker coordinate={{
-          latitude: -23.5492243,
-          longitude: -46.5813785
-        }}
-          title="Meu carro"
-          description='Gol 1.6 - PLACA ONU2021'
-          pinColor={'green'}
-        />
-        <Marker coordinate={{
-          latitude: -24.5492243,
-          longitude: -45.5813785
-        }}
-          title="Minha casa"
-          description='Casa comercial'
-          pinColor={'red'}
-        />
+        {markers.map(marker => (
+          <Marker
+            key={marker.key}
+            coordinate={marker.cords}
+            pinColor={marker.pinColor}
+          />
+        ))}
         </MapView>
     </View>
   );
-}
 
+}
 const styles = StyleSheet.create({
   container: {
     flex: 1,
