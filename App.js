@@ -20,6 +20,10 @@ export default function App() {
     })
   }
 
+  function mudouMapa(region){
+    setRegion(region)
+  }
+
   return (
     <View style={styles.container}>
       <View style={{flexDirection: 'row'}}>
@@ -28,6 +32,11 @@ export default function App() {
       </View>
       <Text>{region.latitude} | {region.longitude}</Text>
       <MapView
+        // onMapReady={() => console.log('onMapReady')}
+        // onRegionChange={() => console.log('onRegionChange')}
+        // onRegionChangeComplete={(region) => mudouMapa(region)}
+        // onPress={(e) => { console.log(e.nativeEvent.coordinate) moverCidade(e.nativeEvent.coordinate.latitude, e.nativeEvent.coordinate.longitude)}}
+
         region={region}
         style={styles.map} />
     </View>
