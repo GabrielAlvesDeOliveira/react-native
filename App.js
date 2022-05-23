@@ -32,10 +32,11 @@ export default function App() {
       </View>
       <Text>{region.latitude} | {region.longitude}</Text>
       <MapView
-        // onMapReady={() => console.log('onMapReady')}
-        // onRegionChange={() => console.log('onRegionChange')}
-        // onRegionChangeComplete={(region) => mudouMapa(region)}
-        // onPress={(e) => { console.log(e.nativeEvent.coordinate) moverCidade(e.nativeEvent.coordinate.latitude, e.nativeEvent.coordinate.longitude)}}
+        // mapType= "standard" | satellite | hybrid
+        // rotateEnabled={false}
+        // scrollEnabled={false}
+        // zoomEnabled={false}
+        // showsTraffic={true}
 
         region={region}
         style={styles.map} />
