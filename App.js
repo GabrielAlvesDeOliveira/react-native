@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import MapView from 'react-native-maps';
+import MapView, { Marker, Callout } from 'react-native-maps';
 import * as Location from 'expo-location'
 import { StyleSheet, Text, View, Button } from 'react-native';
 
@@ -23,8 +23,15 @@ export default function App() {
         return;
       }
 
-      let location = await Location.getCurrentPositionAsync({});
-      setRegion(location);
+      let location = await Location.getCurrentPositionAsync({
+        enableHighAccuracy: true
+      });
+      setRegion({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      })
     })();
   }, []);
 
@@ -54,12 +61,21 @@ export default function App() {
       </View>
       <Text>{region.latitude} | {region.longitude}</Text>
       <MapView
-        minZoomLevel={16}
+        ref={(map) => { let mapa = map }}
         region={region}
         style={styles.map}
         showsUserLocation
         loadingEnabled
-      />
+      >
+        {markers.map((marker) => (
+          <Marker
+            key={marker.key}
+            coordinate={marker.cords}
+            pinColor={marker.pinColor}
+          />
+            
+        ))}
+      </MapView>
     </View>
   );
 
@@ -67,9 +83,9 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: '#fff',
   },
   map: {
     width: '100%',
