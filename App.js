@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import MapView, { Marker } from 'react-native-maps';
+import React, { useState, useEffect } from 'react';
+import MapView from 'react-native-maps';
+import * as Location from 'expo-location'
 import { StyleSheet, Text, View, Button } from 'react-native';
 
 export default function App() {
-
   const [region, setRegion] = useState({
     latitude: -23.5489,
     longitude: -46.6388,
@@ -11,11 +11,25 @@ export default function App() {
     longitudeDelta: 0.0421,
   })
   const [markers, setMarkers] = useState([
-    {key: 0, aviso:"pegiso", cords:{latitude: -15.8080374, longitude: -47.8750231}, pinColor: 'red'},
-    {key: 1, aviso:"tranquilo", cords:{latitude: -15.8380374, longitude: -47.8850231}, pinColor: 'green'},
+    { key: 0, aviso: "pegiso", cords: { latitude: -15.8080374, longitude: -47.8750231 }, pinColor: 'red' },
+    { key: 1, aviso: "tranquilo", cords: { latitude: -15.8380374, longitude: -47.8850231 }, pinColor: 'green' },
   ])
 
-  function moverCidade(lat, long){
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setRegion(location);
+    })();
+  }, []);
+
+
+  function moverCidade(lat, long) {
     setRegion({
       latitude: lat,
       longitude: long,
@@ -24,37 +38,28 @@ export default function App() {
     })
   }
 
-  function mudouMapa(region){
+  function mudouMapa(region) {
     setRegion(region)
   }
 
-  function newMarker(e){
-    setMarkers([...markers, {key: markers.length, cords: e.nativeEvent.coordinate, pinColor: "#0000FF"}])
+  function newMarker(e) {
+    setMarkers([...markers, { key: markers.length, cords: e.nativeEvent.coordinate, pinColor: "#0000FF" }])
   }
 
   return (
     <View style={styles.container}>
-      <View style={{flexDirection: 'row'}}>
-        <Button title='Brasilia' onPress={()=>{ moverCidade(-15.8080354, -47.8750231) }}/>
-        <Button title='São Paulo' onPress={()=>{ moverCidade(-23.5492243, -46.5813785) }}/>
+      <View style={{ flexDirection: 'row' }}>
+        <Button title='Brasilia' onPress={() => { moverCidade(-15.8080354, -47.8750231) }} />
+        <Button title='São Paulo' onPress={() => { moverCidade(-23.5492243, -46.5813785) }} />
       </View>
       <Text>{region.latitude} | {region.longitude}</Text>
       <MapView
+        minZoomLevel={16}
         region={region}
-        style={styles.map} 
-        >
-        {markers.map(marker => (
-          <Marker
-            key={marker.key}
-            coordinate={marker.cords}
-            pinColor={marker.pinColor}
-          >
-          <View style={{height: 40, padding: 5, alignItens: 'center', justifyContent: 'center', borderRadius:  10,backgroundColor: marker.pinColor}}>
-            <Text style={{color: '#FFFFFF'}}>{marker.aviso}</Text>
-          </View>
-          </Marker>
-        ))}
-        </MapView>
+        style={styles.map}
+        showsUserLocation
+        loadingEnabled
+      />
     </View>
   );
 
