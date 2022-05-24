@@ -62,19 +62,12 @@ export default function App() {
       <Text>{region.latitude} | {region.longitude}</Text>
       <MapView
         ref={(map) => { let mapa = map }}
+        mapType="hybrid"
         region={region}
         style={styles.map}
         showsUserLocation
         loadingEnabled
       >
-        {markers.map((marker) => (
-          <Marker
-            key={marker.key}
-            coordinate={marker.cords}
-            pinColor={marker.pinColor}
-          />
-            
-        ))}
       </MapView>
     </View>
   );
