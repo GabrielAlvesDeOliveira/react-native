@@ -56,6 +56,7 @@ export default class Mega extends Component {
           onPress={this.gerarNumeros}
         />
         <View style={{
+          marginTop: 20,
           flexDirection: 'row',
           flexWrap: 'wrap',
           justifyContent: 'center'
