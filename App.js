@@ -10,12 +10,13 @@ export default function App() {
   );
 
 }
-
+d
 const styles = StyleSheet.create({
   FlexV1: {
+    height: 350,
     width: '100%',
-    flex: 1,
     backgroundColor: '#000',
-    justifyContent: 'space-beetween',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
   },
 });
