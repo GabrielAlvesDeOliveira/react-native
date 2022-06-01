@@ -1,22 +1,28 @@
-import { StyleSheet, SafeAreaView, Text } from 'react-native';
-import Quadrado from './src/components/Layout/Quadrado';
+import { View, StyleSheet, SafeAreaView, Text } from 'react-native';
 
 export default function App() {
 
   return (
-    <SafeAreaView style={styles.FlexV1}>
-      <Quadrado />
+    <SafeAreaView style={styles.FlexV2}>
+      <View style={styles.V1} />
+      <View style={styles.V2} />
     </SafeAreaView>
   );
 
 }
 d
 const styles = StyleSheet.create({
-  FlexV1: {
-    height: 350,
-    width: '100%',
+  FlexV2: {
+    width: 100,
     backgroundColor: '#000',
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
+    flex: 1,
   },
+  V1: {
+    backgroundColor: '#ff801a',
+    flexGrow: 3
+  },
+  V2: {
+    backgroundColor: '#dd22c1',
+    flexGrow: 1
+  }
 });
