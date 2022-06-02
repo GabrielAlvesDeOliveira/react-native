@@ -16,6 +16,11 @@ export default class App extends Component {
       <Field/>
       <Field opened/>
       <Field opened nearMines={1}/>
+      <Field mined/>
+      <Field mined opened/>
+      <Field mined opened exploded/>
+      <Field flagged/>
+      <Field flagged opened/>
     </View>
   );
 }
@@ -24,8 +29,9 @@ export default class App extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#f5fcff',
     alignItems: 'center',
     justifyContent: 'center',
+    justifyContent: 'space-around'
   },
 });
