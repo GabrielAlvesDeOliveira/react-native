@@ -1,5 +1,6 @@
 import { USER_LOGGED_IN, USER_LOGGED_OUT, LOADING_USER, USER_LOADED } from "./actionTypes";
 import axios from 'axios'
+import { setMessage } from "./message";
 
 const authBaseURL = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key='
 const API_KEY = 'AIzaSyCB4S9-z2Tz6tg-JsawpVwroZLf6SiZuMo'
@@ -19,20 +20,26 @@ export const logout = () => {
 
 export const createUser = (user) => {
     return dispatch => {
+        dispatch(loadingUser())
         axios.post(authBaseURL + API_KEY, {
             email: user.email,
             password: user.password,
             returnSecureToken: true
-        }).catch(err => console.log(err))
+        }).catch(err => dispatch(setMessage({
+            title: 'Erro',
+            text: 'Ocorreu um erro inesperado',
+        })))
             .then(res => {
-                console.warn('teste: ', res)
                 if (res.data.localId) {
                     axios.put(`/users/${res.data.localId}.json`, {
                         name: user.name,
                     })
-                        .catch(err => console.log(err))
-                        .then(res => {
-                            console.log('user created')
+                        .catch(err => dispatch(setMessage({
+                            title: 'Erro',
+                            text: 'Ocorreu um erro inesperado',
+                        })))
+                        .then(() => {
+                            dispatch(login(user))
                         })
                 }
             })
@@ -58,13 +65,20 @@ export const login = user => {
             email: user.email,
             password: user.password,
             returnSecureToken: true
-        }).catch(err => console.log(err))
+        }).catch(err => dispatch(setMessage({
+            title: 'Erro',
+            text: 'Ocorreu um erro inesperado',
+        })))
             .then(res => {
                 if (res.data.localId) {
+                    user.token = res.data.idToken
                     axios.get(`/users/${res.data.localId}.json`)
-                        .catch(err => console.log(err))
+                        .catch(err => dispatch(setMessage({
+                            title: 'Erro',
+                            text: 'Ocorreu um erro inesperado',
+                        })))
                         .then(res => {
-                            user.password = null
+                            delete user.password
                             user.name = res.data.name
                             dispatch(userLogged(user))
                             dispatch(userLoaded())
